@@ -1,3 +1,4 @@
+const { artifacts } = require("truffle");
 var LicenseToken = artifacts.require("./LicenseToken.sol");
   
 contract('LicenseTokenTest', function (accounts) {

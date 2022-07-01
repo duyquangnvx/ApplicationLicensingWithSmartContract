@@ -13,7 +13,7 @@ const ResponseUtil = (() => {
         },
         handleError: (res, error) => {
             console.log('handleError', error);
-            res.send('Okay123456');
+            res.send(error);
         },
     }
 })();

@@ -156,6 +156,43 @@
 				"internalType": "uint256",
 				"name": "tokenId",
 				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "state",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "expiresOn",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "deviceId",
+				"type": "string"
+			}
+		],
+		"name": "LicenseActivate",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
 			}
 		],
 		"name": "LicenseGiven",
@@ -345,6 +382,71 @@
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "_account",
+				"type": "address"
+			}
+		],
+		"name": "getAllTokenIdsOfAccount",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_account",
+				"type": "address"
+			}
+		],
+		"name": "getAllTokensOfAccount",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "enum LicenseToken.LicenseType",
+						"name": "licenseType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "registeredOn",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "expiresOn",
+						"type": "uint256"
+					},
+					{
+						"internalType": "enum LicenseToken.LicenseState",
+						"name": "state",
+						"type": "uint8"
+					},
+					{
+						"internalType": "string",
+						"name": "deviceId",
+						"type": "string"
+					}
+				],
+				"internalType": "struct LicenseToken.LicenseInfo[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "uint256",
 				"name": "tokenId",
 				"type": "uint256"
@@ -356,6 +458,57 @@
 				"internalType": "address",
 				"name": "",
 				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_account",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "getTokenInfo",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "enum LicenseToken.LicenseType",
+						"name": "licenseType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "registeredOn",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "expiresOn",
+						"type": "uint256"
+					},
+					{
+						"internalType": "enum LicenseToken.LicenseState",
+						"name": "state",
+						"type": "uint8"
+					},
+					{
+						"internalType": "string",
+						"name": "deviceId",
+						"type": "string"
+					}
+				],
+				"internalType": "struct LicenseToken.LicenseInfo",
+				"name": "",
+				"type": "tuple"
 			}
 		],
 		"stateMutability": "view",

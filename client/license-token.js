@@ -1,7 +1,7 @@
 const LicenseToken = (() => {
     const OWNER_PRIVATE_KEY = '31ba960364a7f7e65d13f45933e7a46a15856fca0c99a3900c1559cf634737da';
     const ABI = require('./abi.json');
-    const CONTRACT_ADDRESS = '0x89f9e5Ab6210217eAD56C95f0512F95Fd361409D';
+    const CONTRACT_ADDRESS = '0x04BB3533a461b1259EE6575abBdDc7f9ac0E41A1';
     const RPC_SERVER = 'http://127.0.0.1:8545';
 
     const Web3 = require('web3');
@@ -13,13 +13,43 @@ const LicenseToken = (() => {
     let _init = false;
 
     return {
+        LICENSE_TYPE_WINDOWS: 0,
+        LICENSE_TYPE_MAC: 1,
+        LICENSE_STATE_ACTIVE: 0,
+        LICENSE_STATE_INACTIVE: 1,
+        LICENSE_STATE_EXPIRED: 2,
+
+        METHOD_GIVE_LICENSE: "giveLicense",
+        METHOD_ACTIVATE: "activate",
+        METHOD_IS_LICENSE_ACTIVE: "isLicenseActive",
+        METHOD_HANDLE_EXPIRED_LICENSE: "handleExpiredLicense",
+        METHOD_GET_TOKEN_INFO: "getTokenInfo",
+        METHOD_GET_TOKENS_OF_ACCOUNT: "getAllTokensOfAccount",
+        METHOD_GET_TOKENS_ID_OF_ACCOUNT: "getAllTokenIdsOfAccount",
         initContract: async () => {
             if (_init) return;
             _init = true;
 
             contract = await new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
-            contract.events.LicenseGiven().on('data', event => console.log(event));
-            // contract.getPastEvents('LicenseGiven', {})
+            
+            // listen event
+            // const result = await contract.getPastEvents('LicenseGiven');
+            // console.log("____________", result)
+        },
+        getContract: () => {
+            return contract;
+        },
+        getTokenInfo: async (address, tokenId) => {
+            const result = await LicenseToken.call(LicenseToken.METHOD_GET_TOKEN_INFO, address, tokenId);
+            const token = {
+                tokenId: tokenId,
+                licenseType: result.licenseType,
+                registeredOn: result.registeredOn,
+                expiresOn: result.expiresOn,
+                licenseState: result.state,
+                deviceId: result.deviceId
+            }
+            return token;
         },
         call: async (...args) => {
             const name = args[0];  

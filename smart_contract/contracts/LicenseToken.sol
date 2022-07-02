@@ -12,8 +12,6 @@ contract LicenseToken is Ownable, ERC721 {
   enum LicenseType {WIN, MAC}
   enum LicenseState {ACTIVE, INACTIVE, EXPIRED}
    
-  uint constant LICENSE_LIFE_TIME = 30 days;
-   
   struct LicenseInfo {
     LicenseType licenseType;
     uint registeredOn;
@@ -26,8 +24,9 @@ contract LicenseToken is Ownable, ERC721 {
   mapping(address => uint256[]) tokenIdsOfAccount;
 
   LicenseInfo[] tokens;
-  event LicenseGiven(address account, uint256 tokenId);
+  event LicenseGiven(address account, uint256 tokenId, uint registeredOn);
   event LicenseActivate(address account, uint256 tokenId, uint state, uint expiresOn, string deviceId); 
+  event LicenseRenewal(address _account, uint256 _tokenId, uint state, uint expiresOn, string deviceId);
 
   constructor(string memory name, string memory symbol) ERC721(name, symbol)  {}
    
@@ -43,7 +42,7 @@ contract LicenseToken is Ownable, ERC721 {
     LicenseInfo memory token = _createLicense(_type);
     tokensOfAccount[_account].push(token);
     tokenIdsOfAccount[_account].push(tokenId);
-    emit LicenseGiven(_account, tokenId);
+    emit LicenseGiven(_account, tokenId, token.registeredOn);
   }
 
   function _createLicense(uint256 _type) onlyOwner internal returns (LicenseInfo memory) {
@@ -77,7 +76,7 @@ contract LicenseToken is Ownable, ERC721 {
   }
    
 
-  function activate(address _account, uint256 _tokenId, string memory _deviceId) onlyOwner public {
+  function activate(address _account, uint256 _tokenId, string memory _deviceId, uint licenseLifeTime) onlyOwner public {
     require(_exists(_tokenId), "tokenId is not available!");
     require(ownerOf(_tokenId) == _account);
     LicenseInfo storage token = _getTokenByTokenId(_tokenId);
@@ -85,11 +84,25 @@ contract LicenseToken is Ownable, ERC721 {
     require(token.state == LicenseState.INACTIVE);
    
     token.state = LicenseState.ACTIVE;
-    token.expiresOn = block.timestamp + LICENSE_LIFE_TIME;
+    token.expiresOn = block.timestamp + licenseLifeTime;
     token.deviceId = _deviceId;
     
     emit LicenseActivate(_account, _tokenId, uint(token.state), token.expiresOn, token.deviceId);
   }
+
+  function renewal(address _account, uint256 _tokenId, uint extensionTime) onlyOwner public {
+    require(_exists(_tokenId), "tokenId is not available!");
+    require(ownerOf(_tokenId) == _account);
+    LicenseInfo storage token = _getTokenByTokenId(_tokenId);
+    require(token.registeredOn != 0);
+    require(token.state != LicenseState.INACTIVE);
+   
+    token.state = LicenseState.ACTIVE;
+    token.expiresOn = token.expiresOn + extensionTime;
+
+    emit LicenseRenewal(_account, _tokenId, uint(token.state), token.expiresOn, token.deviceId);
+  }
+
    
   function isLicenseActive(address _account, uint256 _tokenId) public view returns (uint state){
     require(_exists(_tokenId), "tokenId is not available!");

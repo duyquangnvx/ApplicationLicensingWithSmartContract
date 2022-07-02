@@ -16,8 +16,8 @@ const PurchasePage = ({}) => {
     }
 
     const buyByMetaMask = () => {
-        getAddressFromMetaMask((address) => {
-            const result = buyLicense({address})
+        getAddressFromMetaMask(async (address) => {
+            const result = await buyLicense({address})
             console.log('getAddressFromMetaMask result', result)
         })
     }

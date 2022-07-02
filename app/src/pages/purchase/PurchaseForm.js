@@ -1,7 +1,7 @@
 import React from 'react'
 import {Button, Form, Input} from "antd";
 
-const PurchaseForm = ({onSubmit}) => {
+const PurchaseForm = ({onSubmit, buttonText}) => {
 
     return (
         <div>
@@ -14,7 +14,7 @@ const PurchaseForm = ({onSubmit}) => {
                 {/*    <Input/>*/}
                 {/*</Form.Item>*/}
                 <Form.Item>
-                    <Button type="primary" size={"large"} htmlType={"submit"}>Buy license</Button>
+                    <Button type="primary" size={"large"} htmlType={"submit"}>{buttonText || "Buy license"}</Button>
                 </Form.Item>
             </Form>
         </div>

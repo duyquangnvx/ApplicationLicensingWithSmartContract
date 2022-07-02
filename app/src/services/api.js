@@ -9,7 +9,7 @@ export const buyLicense = async (body) => {
     return data;
 }
 
-export const activate = async (body) => {
+export const activateLicense = async (body) => {
     const {data} = await http.post(`${PATH}/activate`, body);
     return data;
 }
@@ -31,7 +31,7 @@ export const getLicenseInfo = async (body) => {
 }
 
 
-export const getTokensOfAccount = async (body) => {
+export const getLicensesOfAddress = async (body) => {
     const {data} = await http.post(`${PATH}/tokens-of-account`, body);
     return data;
 }

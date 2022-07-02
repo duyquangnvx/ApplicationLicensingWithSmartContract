@@ -19,7 +19,7 @@ export const renewal = async (body) => {
     return data;
 }
 
-export const checkLicenseActive = async (body) => {
+export const checkLicenseIsActive = async (body) => {
     const {data} = await http.post(`${PATH}/check-active`, body);
     return data;
 }

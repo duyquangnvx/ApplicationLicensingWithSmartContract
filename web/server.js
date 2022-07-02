@@ -1,5 +1,7 @@
 const express = require('express'); 
+const cors = require('cors');
 const app = express();
+app.use(cors())
 app.use(express.static('public'));
 app.use('/scripts', express.static(`${__dirname}/node_modules/web3.js-browser/build`));
 app.set('view engine', 'ejs');
@@ -11,7 +13,9 @@ app.use(bodyParser.json({extended: false}));
 
 const http = require('http');
 const server = http.createServer(app);
-server.listen(3000);
+server.listen(5000, () => {
+    console.log('api running on port 5000')
+});
 
 require('./controllers/authentication')(app);
 

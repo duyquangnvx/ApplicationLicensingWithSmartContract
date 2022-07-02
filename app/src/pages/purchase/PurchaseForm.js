@@ -1,14 +1,14 @@
 import React from 'react'
-import {Button, Divider, Form, Input, InputNumber, Modal, Space} from "antd";
+import {Button, Form, Input} from "antd";
 
 const PurchaseForm = ({onSubmit}) => {
 
     return (
         <div>
-            <Form labelAlign={"left"} layout={"vertical"} size={"large"}
+            <Form labelAlign={"left"} size={"large"}
                   onFinish={onSubmit}>
-                <Form.Item name={'amount'} required label={"Address"} rules={[{type: 'string', required: true,message: "Input address"}]}>
-                    <InputNumber style={{width: 300}} defaultValue={3}/>
+                <Form.Item name={'address'} required label={"Address"} rules={[{type: 'string', required: true,message: "Input address"}]}>
+                    <Input style={{width: 300}}/>
                 </Form.Item>
                 {/*<Form.Item name={'recipient'} required label={"Nhập public key của người nhận"} rules={[{type: 'string', required: true, message: "Bổ sung public key người nhận"}]}>*/}
                 {/*    <Input/>*/}

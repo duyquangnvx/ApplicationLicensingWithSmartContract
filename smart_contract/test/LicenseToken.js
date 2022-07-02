@@ -1,5 +1,4 @@
-const { artifacts } = require("truffle");
-var LicenseToken = artifacts.require("./LicenseToken.sol");
+const LicenseToken = artifacts.require("./LicenseToken.sol");
   
 contract('LicenseTokenTest', function (accounts) {
   it("test basic flow", async function() {
@@ -25,7 +24,7 @@ contract('LicenseTokenTest', function (accounts) {
       // 1 - LicenseType.INACTIVE
       assert.equal(isActive, 1, "License is not active.");
   
-      await token.activate(tokenId, "UDID");
+      await token.activate(accounts[1], tokenId, "UDID", 2);
       isActive = await token.isLicenseActive.call(accounts[1], tokenId);
       // 0 - LicenseType.ACTIVE
       assert.equal(isActive, 0, "License is active.");

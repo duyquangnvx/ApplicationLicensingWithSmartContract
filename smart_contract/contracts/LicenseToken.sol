@@ -1,8 +1,24 @@
- pragma solidity 0.8.7;
+ pragma solidity 0.8.15;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "https://github.com/0xcert/ethereum-erc721/src/contracts/ownership/ownable.sol";
+
+contract Ownable {
+  address owner;
+   
+  constructor() {
+    owner = msg.sender;
+  }
+   
+  modifier onlyOwner {
+    require(msg.sender == owner);
+    _;
+  }
+   
+  function transferOwnership(address newOwner) onlyOwner  public {
+    owner = newOwner;
+  }
+}
 
 contract LicenseToken is Ownable, ERC721 {
 
@@ -24,11 +40,14 @@ contract LicenseToken is Ownable, ERC721 {
   mapping(address => uint256[]) tokenIdsOfAccount;
 
   LicenseInfo[] tokens;
+  string public NAME = "LicenseToken";
+  string public SYMBOL = "LTC";
+
   event LicenseGiven(address account, uint256 tokenId, uint registeredOn);
   event LicenseActivate(address account, uint256 tokenId, uint state, uint expiresOn, string deviceId); 
   event LicenseRenewal(address _account, uint256 _tokenId, uint state, uint expiresOn, string deviceId);
 
-  constructor(string memory name, string memory symbol) ERC721(name, symbol)  {}
+  constructor() ERC721(NAME, SYMBOL)  {}
    
    function transferFrom(address from, address to, uint256 tokenId) onlyOwner public virtual override {
      ERC721.transferFrom(from, to, tokenId);

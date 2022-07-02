@@ -24,17 +24,20 @@ const PurchasePage = ({}) => {
 
     return (
         <Col offset={2} span={20}>
-            <h1>Blockchain-based Smart-Contracts Application Licensing</h1>
+            <h1 style={{marginTop: 20}}>Blockchain-based Smart-Contracts Application Licensing</h1>
+            <Divider/>
             <h2>Buy license</h2>
-            <Divider />
-            <h3>Buy via your text address</h3>
             <Col span={12}>
-                <PurchaseForm onsonPurchase={onPurchase}/>
-            </Col>
-            <Divider />
-            <h3>If you have MetaMask</h3>
-            <Col span={12}>
-                <Button type="primary" size={"large"} onClick={buyByMetaMask}>Buy license via MetaMask</Button>
+                {/*<Divider/>*/}
+                {/*<h3>Buy via your text address</h3>*/}
+                {/*<Col span={24}>*/}
+                {/*    <PurchaseForm onsonPurchase={onPurchase}/>*/}
+                {/*</Col>*/}
+                {/*<Divider/>*/}
+                {/*<h3>If you have MetaMask</h3>*/}
+                <Col span={12}>
+                    <Button type="primary" size={"large"} onClick={buyByMetaMask}>Buy license via MetaMask</Button>
+                </Col>
             </Col>
         </Col>
     )

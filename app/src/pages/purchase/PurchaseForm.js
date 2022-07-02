@@ -7,8 +7,8 @@ const PurchaseForm = ({onSubmit, buttonText}) => {
         <div>
             <Form labelAlign={"left"} size={"large"}
                   onFinish={onSubmit}>
-                <Form.Item name={'address'} required label={"Address"} rules={[{type: 'string', required: true,message: "Input address"}]}>
-                    <Input style={{width: 300}}/>
+                <Form.Item name={'address'} required label={"Address"} rules={[{type: 'string', required: true, message: "Input address"}]}>
+                    <Input style={{width: '100%'}}/>
                 </Form.Item>
                 {/*<Form.Item name={'recipient'} required label={"Nhập public key của người nhận"} rules={[{type: 'string', required: true, message: "Bổ sung public key người nhận"}]}>*/}
                 {/*    <Input/>*/}

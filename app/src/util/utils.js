@@ -18,6 +18,7 @@ export const showError = (err, func) => {
 };
 
 export const getAddressFromMetaMask = (callback) => {
+    console.log('gọi hàm')
     // define
     let currentAccount = "";
     const setCurrentAccount = (account) => {

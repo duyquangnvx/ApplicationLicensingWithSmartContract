@@ -15,7 +15,7 @@ server.listen(3000);
 
 require('./controllers/authentication')(app);
 
-const LicenseToken = require('./license-token');
+const LicenseToken = require('./base/license-token');
 (async () => {
     await LicenseToken.initContract();
     require('./controllers/license')(app);

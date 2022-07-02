@@ -15,6 +15,11 @@
 				"internalType": "string",
 				"name": "_deviceId",
 				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "licenseLifeTime",
+				"type": "uint256"
 			}
 		],
 		"name": "activate",
@@ -193,9 +198,52 @@
 				"internalType": "uint256",
 				"name": "tokenId",
 				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "registeredOn",
+				"type": "uint256"
 			}
 		],
 		"name": "LicenseGiven",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "_account",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_tokenId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "state",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "expiresOn",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "deviceId",
+				"type": "string"
+			}
+		],
+		"name": "LicenseRenewal",
 		"type": "event"
 	},
 	{
@@ -216,6 +264,29 @@
 		],
 		"name": "OwnershipTransferred",
 		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_account",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "extensionTime",
+				"type": "uint256"
+			}
+		],
+		"name": "renewal",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"inputs": [

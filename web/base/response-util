@@ -13,7 +13,10 @@ const ResponseUtil = (() => {
         },
         handleError: (res, error) => {
             console.log('handleError', error);
-            res.send(error);
+            const message = ResponseUtil.createMessage(ResponseUtil.MESSAGE_ERROR, {
+                error: error
+            });
+            res.send(message);
         },
     }
 })();

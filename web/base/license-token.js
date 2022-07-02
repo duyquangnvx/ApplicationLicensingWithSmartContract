@@ -1,7 +1,7 @@
 const LicenseToken = (() => {
     const OWNER_PRIVATE_KEY = '31ba960364a7f7e65d13f45933e7a46a15856fca0c99a3900c1559cf634737da';
-    const ABI = require('./abi.json');
-    const CONTRACT_ADDRESS = '0x04BB3533a461b1259EE6575abBdDc7f9ac0E41A1';
+    const ABI = require('../abi.json');
+    const CONTRACT_ADDRESS = '0x5dB1A2A405422D7CF0e787FB713FA298B5386DDf';
     const RPC_SERVER = 'http://127.0.0.1:8545';
 
     const Web3 = require('web3');
@@ -13,14 +13,9 @@ const LicenseToken = (() => {
     let _init = false;
 
     return {
-        LICENSE_TYPE_WINDOWS: 0,
-        LICENSE_TYPE_MAC: 1,
-        LICENSE_STATE_ACTIVE: 0,
-        LICENSE_STATE_INACTIVE: 1,
-        LICENSE_STATE_EXPIRED: 2,
-
         METHOD_GIVE_LICENSE: "giveLicense",
         METHOD_ACTIVATE: "activate",
+        METHOD_RENEWAL: "renewal",
         METHOD_IS_LICENSE_ACTIVE: "isLicenseActive",
         METHOD_HANDLE_EXPIRED_LICENSE: "handleExpiredLicense",
         METHOD_GET_TOKEN_INFO: "getTokenInfo",

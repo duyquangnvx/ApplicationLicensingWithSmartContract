@@ -161,19 +161,4 @@ contract LicenseToken is Ownable, ERC721 {
   function _owns(address _claimant, uint256 _tokenId) internal view returns (bool) {
     return ownerOf(_tokenId) == _claimant;
   }
-
-  /**
- * Override isApprovedForAll to auto-approve OS's proxy contract
- */
-function isApprovedForAll(address _owner, address _operator) onlyOwner public override view returns (bool isOperator) {
-    // if OpenSea's ERC721 Proxy Address is detected, auto-return true
-    // if (_owner == owner) {
-    //     return true;
-    // }
-    return true;
-
-    // otherwise, use the default ERC721.isApprovedForAll()
-    return ERC721.isApprovedForAll(_owner, _operator);
-}
-
 }

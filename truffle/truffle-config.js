@@ -23,20 +23,22 @@ const HDWalletProvider = require('@truffle/hdwallet-provider');
 const fs = require('fs');
 const mnemonic = fs.readFileSync(".secret").toString().trim();
 const PROJECT_ID = '474443be41df487281ca528c38a59de5';
-const OWNER_ADDRESS = '0x94301fD24a45855996ED88Fb9460B77A30284DE2';
+const OWNER_ADDRESS = '0xB43A518CaA33565A80eB95968B7ce1B1651241f3';
+//'0x94301fD24a45855996ED88Fb9460B77A30284DE2';
 module.exports = {
   contracts_build_directory: "../client/src/contracts",
   networks: {
     development: {
       host: "127.0.0.1",     // Localhost (default: none)
       port: 8545,            // Standard Ethereum port (default: none)
-      network_id: "*",       // Any network (default: none)
+      network_id: "*"       // Any network (default: none)
     },
     ropsten: {
       provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/${PROJECT_ID}`),
       network_id: 3,       // Ropsten's id
       gas: 5500000,        // Ropsten has a lower block limit than mainnet
       confirmations: 2,    // # of confirmations to wait between deployments. (default: 0)
+      networkCheckTimeout: 120000,
       timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
       skipDryRun: true,     // Skip dry run before migrations? (default: false for public nets )
       from: OWNER_ADDRESS
@@ -52,7 +54,7 @@ module.exports = {
 
   // Set default mocha options here, use special reporters, etc.
   mocha: {
-    // timeout: 100000
+    timeout: 100000
   },
 
   // Configure your compilers

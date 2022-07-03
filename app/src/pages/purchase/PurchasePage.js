@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {buyLicense} from "../../services/api";
 import {Button, Col, Divider, message} from "antd";
 import {getAddressFromMetaMask, handleWeb3Result, showError, showMessage} from "../../util/utils";
@@ -6,12 +6,12 @@ import {useNavigate} from "react-router-dom";
 
 const PurchasePage = ({}) => {
     const navigate = useNavigate()
-
+    const [buyLoading, setBuyLoading] = useState(false)
     const onBuySuccess = (result) => {
         try {
             handleWeb3Result(result);
             message.success("Buy successfully", 5000)
-            navigate('/')
+            navigate('/licenses')
         } catch (err) {
             showError(err)
         }
@@ -36,6 +36,7 @@ const PurchasePage = ({}) => {
 
     const buyByMetaMask = async () => {
         try {
+            setBuyLoading(true)
             const address = await getAddressFromMetaMask()
             const result = await buyLicense({address})
             onBuySuccess(result);
@@ -44,6 +45,7 @@ const PurchasePage = ({}) => {
             showError(err);
         }
 
+        setBuyLoading(false)
     }
 
     return (
@@ -60,7 +62,7 @@ const PurchasePage = ({}) => {
                 {/*<Divider/>*/}
                 {/*<h3>If you have MetaMask</h3>*/}
                 <Col span={12}>
-                    <Button type="primary" size={"large"} onClick={buyByMetaMask}>Buy license via MetaMask</Button>
+                    <Button loading={buyLoading} type="primary" size={"large"} onClick={buyByMetaMask}>Buy license via MetaMask</Button>
                 </Col>
             </Col>
             <Divider/>

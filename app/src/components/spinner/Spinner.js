@@ -1,10 +1,10 @@
 import React from 'react'
 
-const Spinner = ({style}) => {
+const Spinner = ({style,text}) => {
 
     return (
         <div style={{height: '100vh', width: '100vw', display: 'flex', alignItems: 'center', justifyContent: 'center', ...style}}>
-            <em>Loading...</em>
+            <em>{text || "Loading..."}</em>
         </div>
     )
 }

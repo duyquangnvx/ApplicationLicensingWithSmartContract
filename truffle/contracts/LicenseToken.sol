@@ -36,7 +36,6 @@ contract LicenseToken is Ownable, ERC721 {
     string deviceId;
   }
 
-  mapping(address => LicenseInfo[]) tokensOfAccount;
   mapping(address => uint256[]) tokenIdsOfAccount;
 
   LicenseInfo[] tokens;
@@ -46,7 +45,7 @@ contract LicenseToken is Ownable, ERC721 {
   event LicenseGiven(address account, uint256 tokenId, uint registeredOn);
   event LicenseActivate(address account, uint256 tokenId, uint state, uint expiresOn, string deviceId); 
   event LicenseRenewal(address _account, uint256 _tokenId, uint state, uint expiresOn, string deviceId);
-
+  event GetAllTokensOfAccount(address _account, LicenseInfo[] tokensOfAccount, uint256[] tokenIdsOfAccount);
 
   constructor() ERC721(NAME, SYMBOL)  {}
    
@@ -60,7 +59,6 @@ contract LicenseToken is Ownable, ERC721 {
     _tokenIds.increment();
     _mint(_account, tokenId);
     LicenseInfo memory token = _createLicense(_type);
-    tokensOfAccount[_account].push(token);
     tokenIdsOfAccount[_account].push(tokenId);
     emit LicenseGiven(_account, tokenId, token.registeredOn);
   }
@@ -78,7 +76,13 @@ contract LicenseToken is Ownable, ERC721 {
   }
 
   function getAllTokensOfAccount(address _account) onlyOwner public view returns (LicenseInfo[] memory) {
-      return tokensOfAccount[_account];
+      uint256[] memory tokenIds = tokenIdsOfAccount[_account];
+      LicenseInfo[] memory tokensOfAccount = new LicenseInfo[](tokenIds.length);
+      for (uint256 i; i < tokenIds.length; i++) {
+              tokensOfAccount[i] = tokens[tokenIds[i]];
+      }
+      
+      return tokensOfAccount;
   }
   function getAllTokenIdsOfAccount(address _account) onlyOwner public view returns (uint256[] memory) {
       return tokenIdsOfAccount[_account];
@@ -89,17 +93,12 @@ contract LicenseToken is Ownable, ERC721 {
     require(ownerOf(_tokenId) == _account);
     return tokens[_tokenId];
   }
-
-  function _getTokenByTokenId(uint256 _tokenId) onlyOwner internal view returns (LicenseInfo storage) {
-    require(_exists(_tokenId), "tokenId is not available!");
-    return tokens[_tokenId];
-  }
    
 
   function activate(address _account, uint256 _tokenId, string memory _deviceId, uint licenseLifeTime) onlyOwner public {
     require(_exists(_tokenId), "tokenId is not available!");
     require(ownerOf(_tokenId) == _account);
-    LicenseInfo storage token = _getTokenByTokenId(_tokenId);
+    LicenseInfo storage token = tokens[_tokenId];
     require(token.registeredOn != 0);
     require(token.state == LicenseState.INACTIVE);
    
@@ -113,7 +112,7 @@ contract LicenseToken is Ownable, ERC721 {
   function renewal(address _account, uint256 _tokenId, uint extensionTime) onlyOwner public {
     require(_exists(_tokenId), "tokenId is not available!");
     require(ownerOf(_tokenId) == _account);
-    LicenseInfo storage token = _getTokenByTokenId(_tokenId);
+    LicenseInfo storage token = tokens[_tokenId];
     require(token.registeredOn != 0);
     require(token.state != LicenseState.INACTIVE);
    
@@ -128,7 +127,7 @@ contract LicenseToken is Ownable, ERC721 {
     require(_exists(_tokenId), "tokenId is not available!");
     require(ownerOf(_tokenId) == _account);
    
-    LicenseInfo memory token = _getTokenByTokenId(_tokenId);
+    LicenseInfo memory token = tokens[_tokenId];
     if (token.expiresOn < block.timestamp && token.state == LicenseState.ACTIVE) {
        return uint(LicenseState.EXPIRED);
     }
@@ -140,7 +139,7 @@ contract LicenseToken is Ownable, ERC721 {
     require(_exists(_tokenId), "tokenId is not available!");
     require(ownerOf(_tokenId) == _account);
    
-    LicenseInfo storage token = _getTokenByTokenId(_tokenId);
+    LicenseInfo storage token = tokens[_tokenId];
     if (token.expiresOn < block.timestamp && token.state == LicenseState.ACTIVE) {
       token.state = LicenseState.EXPIRED;
       // note: no delete token. Because it can be renewal
@@ -153,7 +152,6 @@ contract LicenseToken is Ownable, ERC721 {
   function removeTokenInTokensOfAccount(address _account, uint256 _tokenId) onlyOwner internal {
     for (uint256 i = 0; i < tokenIdsOfAccount[_account].length; i++) {
       if (tokenIdsOfAccount[_account][i] == _tokenId) {
-        delete tokensOfAccount[_account][i];
         delete tokenIdsOfAccount[_account][i];
         break;
       }

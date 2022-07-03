@@ -10,6 +10,7 @@ module.exports = (app) => {
             const result = await LicenseToken.send(LicenseToken.METHOD_GIVE_LICENSE, address, LicenseConfig.LICENSE_TYPE_WINDOWS);
             const tokenId = result.events.LicenseGiven.returnValues.tokenId;
             const registeredOn = result.events.LicenseGiven.returnValues.registeredOn;
+            console.log('-----------------', registeredOn, LicenseConfig.getLicenseTimeLife());
             const message = ResponseUtil.createMessage(ResponseUtil.MESSAGE_SUCCESS, 
                 {
                     tokenId: tokenId,

@@ -1,13 +1,14 @@
 
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 //
+// Secret Recovery Phrase (MetaMask) 
 const fs = require('fs');
 const mnemonic = fs.readFileSync(".secret").toString().trim();
-const PROJECT_ID = '474443be41df487281ca528c38a59de5';
-const OWNER_ADDRESS = '0xB43A518CaA33565A80eB95968B7ce1B1651241f3';
-//'0x94301fD24a45855996ED88Fb9460B77A30284DE2';
+const INFURA_PROJECT_ID = '474443be41df487281ca528c38a59de5';  // infura project id
+const OWNER_ADDRESS = '0x5CFBc5ad648A0edfd8C92279dAf6279c85c83443';
+
 module.exports = {
-  contracts_build_directory: "../client/src/contracts",
+  contracts_build_directory: "../app/src/server/contracts",
   networks: {
     development: {
       host: "127.0.0.1",     // Localhost (default: none)
@@ -15,7 +16,7 @@ module.exports = {
       network_id: "*"       // Any network (default: none)
     },
     ropsten: {
-      provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/${PROJECT_ID}`),
+      provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/${INFURA_PROJECT_ID}`),
       network_id: 3,       // Ropsten's id
       gas: 5500000,        // Ropsten has a lower block limit than mainnet
       confirmations: 2,    // # of confirmations to wait between deployments. (default: 0)

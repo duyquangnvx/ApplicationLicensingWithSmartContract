@@ -14,7 +14,7 @@ module.exports = (app) => {
                 {
                     tokenId: tokenId,
                     registeredOn: registeredOn,
-                    state: LicenseConfig.LICENSE_STATE_INACTIVE
+                    licenseState: LicenseConfig.LICENSE_STATE_INACTIVE
                 }
             );
             res.json(message);

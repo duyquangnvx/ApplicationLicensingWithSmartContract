@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react'
-import {buyLicense, getLicensesOfAddress} from "../../services/api";
-import {getAddressFromMetaMask} from "../../util/utils";
-import {Button, Col, Divider, Table} from "antd";
-import PurchaseForm from "../purchase/PurchaseForm";
+import {activateLicense, getLicensesOfAddress} from "../../services/api";
+import {getAddressFromMetaMask, handleWeb3Result, showError, showMessage} from "../../util/utils";
+import {Button, Col, Divider, Space, Table, Tooltip} from "antd";
+import moment from "moment";
 
 const LicenseMangePage = ({}) => {
 
@@ -13,11 +13,54 @@ const LicenseMangePage = ({}) => {
         getByMetaMask()
     }, [])
 
+    const onActivateLicense = async (item) => {
+        try {
+            const {tokenId} = item;
+            const address = await getAddressFromMetaMask();
+            const result = await activateLicense({address, tokenId})
+            const data = handleWeb3Result(result);
+            localStorage.setItem("tokenId", tokenId)
+            showMessage("Active successfully!");
+        } catch (err) {
+            showError(err);
+        }
+    }
+
     const dataSource = licenses.map((l, index) => ({key: index, ...l,}));
     const columns = [{
-        title: "Token",
+        title: "Token Id",
         dataIndex: 'tokenId'
-    }]
+    }, {
+        title: "License State",
+        dataIndex: 'licenseState'
+    }, {
+        title: "Expires On",
+        dataIndex: 'expiresOn'
+    }, {
+        title: "License State",
+        dataIndex: 'licenseState'
+    }, {
+        title: "Registered On",
+        dataIndex: 'registeredOn',
+        render: (value) => <span>{moment(value * 1000).format("DD-MM-YYYY HH:mm:ss")}</span>
+    },
+        {
+            key: "action",
+            width: 160,
+            render: (item, index) => (
+                <Space size="middle" key={index}>
+                    <Tooltip placement="bottom" title={"Activate"}>
+                        <Button
+                            type="primary"
+                            onClick={() => {
+                                onActivateLicense(item)
+                            }}
+                        >Active</Button>
+                    </Tooltip>
+                </Space>
+            ),
+        },
+    ]
 
     const getLicenses = async (formData) => {
         try {
@@ -28,12 +71,12 @@ const LicenseMangePage = ({}) => {
         }
     }
 
-    const getByMetaMask = () => {
-        getAddressFromMetaMask(async (address) => {
-            const result = await getLicensesOfAddress({address})
-            setLicenses(result)
-            console.log('getLicensesOfAddress result', result)
-        })
+    const getByMetaMask = async () => {
+        const address = await getAddressFromMetaMask();
+        const result = await getLicensesOfAddress({address})
+        const data = handleWeb3Result(result);
+        setLicenses(data.tokens)
+        console.log('getLicensesOfAddress result', data.tokens)
     }
 
     if (loading) {

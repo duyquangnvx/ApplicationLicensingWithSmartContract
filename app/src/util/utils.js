@@ -1,4 +1,4 @@
-import {message as antMessage} from "antd";
+import {message, message as antMessage} from "antd";
 import Web3Util from "./web3-util";
 
 export const getResponseErrorMessage = (err) => {
@@ -18,13 +18,30 @@ export const showError = (err, func) => {
     displayFunc(getResponseErrorMessage(err));
 };
 
-export const getAddressFromMetaMask = (callback) => {
+export const showMessage = (message) => {
+    antMessage.success(message);
+};
+
+export const getAddressFromMetaMask = async () => {
     console.log('gọi hàm')
-    
-    let account = Web3Util.getCurrentAccount();
-    callback(account);
+
+    if (typeof window.ethereum !== 'undefined') {
+        console.log('MetaMask is installed!');
+        const accounts = await window.ethereum.request({method: 'eth_requestAccounts'});
+        return accounts[0]
+    }
 
 }
 
-
-
+export const handleWeb3Result = (result, show = false) => {
+    const {data, error} = result;
+    if (error !== 0) {
+        const {error: {reason = 'Error occur'}} = data;
+        if (show) {
+            message.error(reason);
+        }
+        throw new Error(reason);
+    } else {
+        return data;
+    }
+}

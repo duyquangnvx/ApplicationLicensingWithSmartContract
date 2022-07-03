@@ -1,25 +1,47 @@
 import React from 'react'
-import PurchaseForm from "./PurchaseForm";
 import {buyLicense} from "../../services/api";
-import {Button, Col, Divider} from "antd";
-import {getAddressFromMetaMask} from "../../util/utils";
+import {Button, Col, Divider, message} from "antd";
+import {getAddressFromMetaMask, handleWeb3Result, showError, showMessage} from "../../util/utils";
+import {useNavigate} from "react-router-dom";
 
 const PurchasePage = ({}) => {
+    const navigate = useNavigate()
+
+    const onBuySuccess = (result) => {
+        const data = handleWeb3Result(result);
+        const {tokenId} = data;
+        message.success("Buy successfully", 5000)
+        localStorage.setItem("tokenId", tokenId);
+        navigate('/')
+    }
+
 
     const onPurchase = async (formData) => {
         try {
             const result = await buyLicense(formData)
+            const {error, data} = result;
+            if (error !== 0) {
+                onBuySuccess(result);
+            } else {
+                const {error: {reason}} = error;
+                showMessage(reason)
+            }
             console.log('result', result)
         } catch (err) {
-            console.log(err)
+            showError(err);
         }
     }
 
-    const buyByMetaMask = () => {
-        getAddressFromMetaMask(async (address) => {
+    const buyByMetaMask = async () => {
+        try {
+            const address = await getAddressFromMetaMask()
             const result = await buyLicense({address})
+            onBuySuccess(result);
             console.log('getAddressFromMetaMask result', result)
-        })
+        } catch (err) {
+            showError(err);
+        }
+
     }
 
     return (

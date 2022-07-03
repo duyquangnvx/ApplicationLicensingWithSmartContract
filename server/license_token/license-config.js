@@ -1,5 +1,5 @@
 const LicenseConfig = (() => {
-    const ONE_DAY_MIL = 86400000; 
+    const ONE_DAY_MIL = 86400; 
     const LICENSE_LIFE_TIME = 30 * ONE_DAY_MIL;   // days
     return {
 

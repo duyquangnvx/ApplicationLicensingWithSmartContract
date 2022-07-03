@@ -1,26 +1,30 @@
 import React, {useEffect, useState} from 'react'
 import {activateLicense, getLicensesOfAddress} from "../../services/api";
-import {getAddressFromMetaMask, handleWeb3Result, showError, showMessage} from "../../util/utils";
-import {Button, Col, Divider, Space, Table, Tooltip} from "antd";
+import {getAddressFromMetaMask, getDeviceId, handleWeb3Result, showError, showMessage} from "../../util/utils";
+import {Button, Col, Divider, Row, Space, Table, Tooltip} from "antd";
 import moment from "moment";
+import {Link, useNavigate} from "react-router-dom";
+import Spinner from "../../components/spinner/Spinner";
 
 const LicenseMangePage = ({}) => {
+    const navigate = useNavigate()
 
     const [licenses, setLicenses] = useState([])
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getByMetaMask()
+        getByMetaMask().then(r => setLoading(false))
     }, [])
 
     const onActivateLicense = async (item) => {
         try {
             const {tokenId} = item;
             const address = await getAddressFromMetaMask();
-            const result = await activateLicense({address, tokenId})
+            const result = await activateLicense({address, tokenId, deviceId: getDeviceId()})
             const data = handleWeb3Result(result);
             localStorage.setItem("tokenId", tokenId)
             showMessage("Active successfully!");
+            navigate("/")
         } catch (err) {
             showError(err);
         }
@@ -35,7 +39,9 @@ const LicenseMangePage = ({}) => {
         dataIndex: 'licenseState'
     }, {
         title: "Expires On",
-        dataIndex: 'expiresOn'
+        dataIndex: 'expiresOn',
+        render: (value) => value > 0 ?
+            <span>{moment(value * 1000).format("DD-MM-YYYY HH:mm:ss")}</span> : 'Not active'
     }, {
         title: "License State",
         dataIndex: 'licenseState'
@@ -47,18 +53,27 @@ const LicenseMangePage = ({}) => {
         {
             key: "action",
             width: 160,
-            render: (item, index) => (
-                <Space size="middle" key={index}>
-                    <Tooltip placement="bottom" title={"Activate"}>
-                        <Button
-                            type="primary"
-                            onClick={() => {
-                                onActivateLicense(item)
-                            }}
-                        >Active</Button>
-                    </Tooltip>
-                </Space>
-            ),
+            render: (item, index) => {
+                switch (item.licenseState) {
+                    case 0:
+                    case "0":
+                        return <span>Activated</span>
+                    case 1:
+                    case "1":
+                        return <Space size="middle" key={index}>
+                            <Tooltip placement="bottom" title={"Activate"}>
+                                <Button
+                                    type="primary"
+                                    onClick={() => {
+                                        onActivateLicense(item)
+                                    }}
+                                >Active</Button>
+                            </Tooltip>
+                        </Space>
+                    default:
+                        return "Expired"
+                }
+            },
         },
     ]
 
@@ -80,12 +95,17 @@ const LicenseMangePage = ({}) => {
     }
 
     if (loading) {
-        return <span>Loading...</span>
+        return <Spinner/>;
     }
 
     return (
         <Col offset={2} span={20}>
-            <h1 style={{marginTop: 20}}>Your licenses</h1>
+            <div style={{marginTop: 20}}>
+                <h1 style={{margin: 0}}>Your licenses</h1>
+                <Link to={'/'}>
+                    <p>Go home</p>
+                </Link>
+            </div>
             <Divider/>
             {/*<h3>Input your address manually</h3>*/}
             {/*<Col span={12}>*/}

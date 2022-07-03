@@ -1,16 +1,12 @@
-import React, {useEffect, useState} from 'react'
-import {useNavigate} from "react-router-dom";
-import {checkLicenseIsActive} from "../../services/api";
-import {getAddressFromMetaMask, showError} from "../../util/utils";
+import React, {useEffect} from 'react'
+import {Link, useNavigate} from "react-router-dom";
+import {checkLicenseIsActive, getLicensesOfAddress} from "../../services/api";
+import {getAddressFromMetaMask, handleWeb3Result, showError} from "../../util/utils";
 import {Col, message} from "antd";
-import Web3Util from "../../util/web3-util";
 
 const HomePage = ({}) => {
     const navigate = useNavigate()
 
-    const [license, setLicense] = useState({})
-// const web3 = new Web3(Web3.givenProvider || 'http://localhost:7545');
-    // const ethereum = web3.eth;
     const tokenId = localStorage.getItem("tokenId");
     const deviceId = "some_device_id";
 
@@ -46,14 +42,30 @@ const HomePage = ({}) => {
                     // alert("License is valid")
                 }
             }).catch(err => showError(err));
+        } else if (address) {
+            // check address has any token not expire
+            const result = await getLicensesOfAddress()
+            const data = handleWeb3Result(result, true);
+            const {tokens = []} = data;
+            let anyToken = tokens.find(t => t.licenseState !== 2);
+            if (anyToken != null) {
+                navigate('/licenses')
+            } else {
+                message.warn("Your address does not have any license valid! Activate one")
+                navigate('/purchase')
+            }
         } else {
+            message.warn("Your address does not have any license!")
             navigate('/purchase')
         }
     }
 
     return (
         <Col offset={2} span={20}>
-            <h1>Your license is valid!</h1>
+            <h1 style={{marginTop: 20}}>Wellcome to my application!</h1>
+            <Link to={'/licenses'}>
+                <p>View licenses</p>
+            </Link>
         </Col>
     )
 }

@@ -1,5 +1,5 @@
 import {message, message as antMessage} from "antd";
-import Web3Util from "./web3-util";
+import {v4} from 'uuid'
 
 export const getResponseErrorMessage = (err) => {
     if (err.response) {
@@ -44,4 +44,13 @@ export const handleWeb3Result = (result, show = false) => {
     } else {
         return data;
     }
+}
+
+export const getDeviceId = () => {
+    const deviceId = localStorage.getItem("deviceId");
+    if (!deviceId) {
+        localStorage.setItem("deviceId", v4())
+    }
+
+    return localStorage.getItem("deviceId")
 }

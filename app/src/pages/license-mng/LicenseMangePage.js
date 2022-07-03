@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {activateLicense, getLicensesOfAddress} from "../../services/api";
-import {getAddressFromMetaMask, handleWeb3Result, showError, showMessage} from "../../util/utils";
+import {getAddressFromMetaMask, getDeviceId, handleWeb3Result, showError, showMessage} from "../../util/utils";
 import {Button, Col, Divider, Space, Table, Tooltip} from "antd";
 import moment from "moment";
 
@@ -17,7 +17,7 @@ const LicenseMangePage = ({}) => {
         try {
             const {tokenId} = item;
             const address = await getAddressFromMetaMask();
-            const result = await activateLicense({address, tokenId})
+            const result = await activateLicense({address, tokenId, deviceId: getDeviceId()})
             const data = handleWeb3Result(result);
             localStorage.setItem("tokenId", tokenId)
             showMessage("Active successfully!");
@@ -35,7 +35,9 @@ const LicenseMangePage = ({}) => {
         dataIndex: 'licenseState'
     }, {
         title: "Expires On",
-        dataIndex: 'expiresOn'
+        dataIndex: 'expiresOn',
+        render: (value) => value > 0 ?
+            <span>{moment(value * 1000).format("DD-MM-YYYY HH:mm:ss")}</span> : 'Not active'
     }, {
         title: "License State",
         dataIndex: 'licenseState'
@@ -47,18 +49,27 @@ const LicenseMangePage = ({}) => {
         {
             key: "action",
             width: 160,
-            render: (item, index) => (
-                <Space size="middle" key={index}>
-                    <Tooltip placement="bottom" title={"Activate"}>
-                        <Button
-                            type="primary"
-                            onClick={() => {
-                                onActivateLicense(item)
-                            }}
-                        >Active</Button>
-                    </Tooltip>
-                </Space>
-            ),
+            render: (item, index) => {
+                switch (item.licenseState) {
+                    case 0:
+                    case "0":
+                        return <span>Activated</span>
+                    case 1:
+                    case "1":
+                        return <Space size="middle" key={index}>
+                            <Tooltip placement="bottom" title={"Activate"}>
+                                <Button
+                                    type="primary"
+                                    onClick={() => {
+                                        onActivateLicense(item)
+                                    }}
+                                >Active</Button>
+                            </Tooltip>
+                        </Space>
+                    default:
+                        return "Expired"
+                }
+            },
         },
     ]
 

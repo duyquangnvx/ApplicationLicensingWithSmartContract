@@ -6,6 +6,7 @@ const http = axios.create({baseURL: API_BASE_URL});
 const PATH = '/license'
 export const buyLicense = async (body) => {
     const {data} = await http.post(`${PATH}/buy`, body);
+    console.log('-------buyLicense', data);
     return data;
 }
 

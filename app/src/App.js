@@ -6,7 +6,6 @@ import LicenseMangePage from "./pages/license-mng/LicenseMangePage";
 
 function App() {
 
-
     return (
         <div className="App">
             <BrowserRouter>

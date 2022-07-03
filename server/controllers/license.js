@@ -87,16 +87,22 @@ module.exports = (app) => {
             const address = req.body.address;   
             const tokenId = req.body.tokenId; 
             
+            const license = await LicenseToken.getTokenInfo(address, tokenId);
             const licenseState = await LicenseToken.call(LicenseToken.METHOD_IS_LICENSE_ACTIVE, address, tokenId);
-
-            if (licenseState == LicenseConfig.LICENSE_STATE_EXPIRED) {
-                await LicenseToken.call(LicenseToken.METHOD_HANDLE_EXPIRED_LICENSE, address, tokenId);
-                console.log('handleExpiredLicense', tokenId);
+            if (licenseState === LicenseConfig.LICENSE_STATE_EXPIRED) {
+                if (license.licenseState === LicenseConfig.LICENSE_STATE_ACTIVE) {
+                    console.log('handleExpiredLicense', tokenId);
+                    await LicenseToken.call(LicenseToken.METHOD_HANDLE_EXPIRED_LICENSE, address, tokenId);
+                }
             }
+            const isLicenseExpired = licenseState === LicenseConfig.LICENSE_STATE_EXPIRED;
+            console.log(`tokenId: ${tokenId}, isLicenseExpired: ${isLicenseExpired}`);
+
             const message = ResponseUtil.createMessage(ResponseUtil.MESSAGE_SUCCESS, 
                 {
                     tokenId: tokenId,
-                    licenseState: licenseState
+                    licenseState: licenseState,
+                    isLicenseExpired: isLicenseExpired
                 }
             );
             res.json(message);

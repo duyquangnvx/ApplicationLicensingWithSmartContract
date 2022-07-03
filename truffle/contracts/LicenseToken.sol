@@ -47,6 +47,7 @@ contract LicenseToken is Ownable, ERC721 {
   event LicenseActivate(address account, uint256 tokenId, uint state, uint expiresOn, string deviceId); 
   event LicenseRenewal(address _account, uint256 _tokenId, uint state, uint expiresOn, string deviceId);
 
+
   constructor() ERC721(NAME, SYMBOL)  {}
    
    function transferFrom(address from, address to, uint256 tokenId) onlyOwner public virtual override {
@@ -141,9 +142,11 @@ contract LicenseToken is Ownable, ERC721 {
    
     LicenseInfo storage token = _getTokenByTokenId(_tokenId);
     if (token.expiresOn < block.timestamp && token.state == LicenseState.ACTIVE) {
-       _burn(_tokenId);
-       delete tokens[_tokenId];
-       removeTokenInTokensOfAccount(_account, _tokenId);
+      token.state = LicenseState.EXPIRED;
+      // note: no delete token. Because it can be renewal
+      //  _burn(_tokenId);
+      //  delete tokens[_tokenId];
+      //  removeTokenInTokensOfAccount(_account, _tokenId);
     }
   }
 

@@ -8,7 +8,7 @@ const INFURA_PROJECT_ID = '474443be41df487281ca528c38a59de5';  // infura project
 const OWNER_ADDRESS = '0x5CFBc5ad648A0edfd8C92279dAf6279c85c83443';
 
 module.exports = {
-  contracts_build_directory: "../app/src/server/contracts",
+  contracts_build_directory: "../server/contracts",
   networks: {
     development: {
       host: "127.0.0.1",     // Localhost (default: none)

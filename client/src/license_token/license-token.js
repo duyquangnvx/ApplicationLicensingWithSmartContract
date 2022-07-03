@@ -1,11 +1,8 @@
 const LicenseToken = (() => {
-    // const OWNER_PRIVATE_KEY = '0x31ba960364a7f7e65d13f45933e7a46a15856fca0c99a3900c1559cf634737da';
-    // const CONTRACT_ADDRESS = '0x5dB1A2A405422D7CF0e787FB713FA298B5386DDf';
-    // const RPC_SERVER = 'http://127.0.0.1:8545';
-    const OWNER_PRIVATE_KEY = '0xcfad5e35f636d2d32e4630453ff526dcec9b0afd30a526d3ef5dbb54e6d2850c';
-    const CONTRACT_ADDRESS = '0xa76d9CE4882E9b6847a4Da04B0ce810FbD6C5389';
-    const RPC_SERVER = 'https://ropsten.infura.io/v3/474443be41df487281ca528c38a59de5';
-
+    const OWNER_PRIVATE_KEY = '0x31ba960364a7f7e65d13f45933e7a46a15856fca0c99a3900c1559cf634737da';
+    const CONTRACT_ADDRESS = '0x5dB1A2A405422D7CF0e787FB713FA298B5386DDf';
+    const RPC_SERVER = 'http://127.0.0.1:8545';
+    
     const ContractConfig = require('../contracts/LicenseToken.json');
     const ABI = ContractConfig.abi;
 

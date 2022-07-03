@@ -8,11 +8,13 @@ const PurchasePage = ({}) => {
     const navigate = useNavigate()
 
     const onBuySuccess = (result) => {
-        const data = handleWeb3Result(result);
-        const {tokenId} = data;
-        message.success("Buy successfully", 5000)
-        localStorage.setItem("tokenId", tokenId);
-        navigate('/')
+        try {
+            handleWeb3Result(result);
+            message.success("Buy successfully", 5000)
+            navigate('/')
+        } catch (err) {
+            showError(err)
+        }
     }
 
 
@@ -59,6 +61,13 @@ const PurchasePage = ({}) => {
                 {/*<h3>If you have MetaMask</h3>*/}
                 <Col span={12}>
                     <Button type="primary" size={"large"} onClick={buyByMetaMask}>Buy license via MetaMask</Button>
+                </Col>
+            </Col>
+            <Divider/>
+            <h2>Or check if you have any license</h2>
+            <Col span={12}>
+                <Col span={12}>
+                    <Button type="primary" size={"large"} onClick={() => navigate("/licenses")}>Check licenses</Button>
                 </Col>
             </Col>
         </Col>

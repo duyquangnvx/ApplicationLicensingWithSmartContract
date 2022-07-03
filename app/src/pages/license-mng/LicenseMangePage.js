@@ -1,16 +1,19 @@
 import React, {useEffect, useState} from 'react'
 import {activateLicense, getLicensesOfAddress} from "../../services/api";
 import {getAddressFromMetaMask, getDeviceId, handleWeb3Result, showError, showMessage} from "../../util/utils";
-import {Button, Col, Divider, Space, Table, Tooltip} from "antd";
+import {Button, Col, Divider, Row, Space, Table, Tooltip} from "antd";
 import moment from "moment";
+import {Link, useNavigate} from "react-router-dom";
+import Spinner from "../../components/spinner/Spinner";
 
 const LicenseMangePage = ({}) => {
+    const navigate = useNavigate()
 
     const [licenses, setLicenses] = useState([])
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getByMetaMask()
+        getByMetaMask().then(r => setLoading(false))
     }, [])
 
     const onActivateLicense = async (item) => {
@@ -21,6 +24,7 @@ const LicenseMangePage = ({}) => {
             const data = handleWeb3Result(result);
             localStorage.setItem("tokenId", tokenId)
             showMessage("Active successfully!");
+            navigate("/")
         } catch (err) {
             showError(err);
         }
@@ -91,12 +95,17 @@ const LicenseMangePage = ({}) => {
     }
 
     if (loading) {
-        return <span>Loading...</span>
+        return <Spinner/>;
     }
 
     return (
         <Col offset={2} span={20}>
-            <h1 style={{marginTop: 20}}>Your licenses</h1>
+            <div style={{marginTop: 20}}>
+                <h1 style={{margin: 0}}>Your licenses</h1>
+                <Link to={'/'}>
+                    <p>Go home</p>
+                </Link>
+            </div>
             <Divider/>
             {/*<h3>Input your address manually</h3>*/}
             {/*<Col span={12}>*/}

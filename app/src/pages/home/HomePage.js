@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {checkLicenseIsActive, getLicensesOfAddress} from "../../services/api";
 import {getAddressFromMetaMask, handleWeb3Result, showError} from "../../util/utils";
 import {Col, message} from "antd";
@@ -63,6 +63,9 @@ const HomePage = ({}) => {
     return (
         <Col offset={2} span={20}>
             <h1 style={{marginTop: 20}}>Wellcome to my application!</h1>
+            <Link to={'/licenses'}>
+                <p>View licenses</p>
+            </Link>
         </Col>
     )
 }

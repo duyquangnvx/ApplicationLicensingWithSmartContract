@@ -6,7 +6,7 @@ const LicenseToken = (() => {
    
     // todo: config connect smart contract for testnet (ropsten)
     const OWNER_PRIVATE_KEY = '0x48ee5080dac117d014fdbf2dcc46990c927039a33c073d4485e168fcf549aba6';
-    const CONTRACT_ADDRESS = '0x8e5352b992bCBA110d18CF8BB5B78b10F1E2Ca99';
+    const CONTRACT_ADDRESS = '0xea10065100A82eDe499A4f1370C7bc8353D9960f';
     const RPC_SERVER = 'https://ropsten.infura.io/v3/474443be41df487281ca528c38a59de5';
 
     // abi for create contract instance
@@ -33,6 +33,7 @@ const LicenseToken = (() => {
         METHOD_GET_TOKEN_INFO: "getTokenInfo",
         METHOD_GET_TOKENS_OF_ACCOUNT: "getAllTokensOfAccount",
         METHOD_GET_TOKENS_ID_OF_ACCOUNT: "getAllTokenIdsOfAccount",
+        METHOD_CHEAT_EXPIRED_LICENSE: "processCheatExpiredLicense",
         initContract: async () => {
             if (_init) return;
             _init = true;

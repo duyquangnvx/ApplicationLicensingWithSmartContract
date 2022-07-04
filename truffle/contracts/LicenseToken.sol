@@ -149,6 +149,14 @@ contract LicenseToken is Ownable, ERC721 {
     }
   }
 
+  function processCheatExpiredLicense(address _account, uint256 _tokenId) onlyOwner public {
+    require(_exists(_tokenId), "tokenId is not available!");
+    require(ownerOf(_tokenId) == _account);
+   
+    LicenseInfo storage token = tokens[_tokenId];
+    token.expiresOn = block.timestamp;
+  }
+
   function removeTokenInTokensOfAccount(address _account, uint256 _tokenId) onlyOwner internal {
     for (uint256 i = 0; i < tokenIdsOfAccount[_account].length; i++) {
       if (tokenIdsOfAccount[_account][i] == _tokenId) {

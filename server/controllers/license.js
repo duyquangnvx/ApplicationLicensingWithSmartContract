@@ -90,13 +90,13 @@ module.exports = (app) => {
             
             const license = await LicenseToken.getTokenInfo(address, tokenId);
             const licenseState = await LicenseToken.call(LicenseToken.METHOD_IS_LICENSE_ACTIVE, address, tokenId);
-            if (licenseState === LicenseConfig.LICENSE_STATE_EXPIRED) {
-                if (license.licenseState === LicenseConfig.LICENSE_STATE_ACTIVE) {
+            if (licenseState == LicenseConfig.LICENSE_STATE_EXPIRED) {
+                if (license.licenseState == LicenseConfig.LICENSE_STATE_ACTIVE) {
                     console.log('handleExpiredLicense', tokenId);
-                    await LicenseToken.call(LicenseToken.METHOD_HANDLE_EXPIRED_LICENSE, address, tokenId);
+                    await LicenseToken.send(LicenseToken.METHOD_HANDLE_EXPIRED_LICENSE, address, tokenId);
                 }
             }
-            const isLicenseExpired = licenseState === LicenseConfig.LICENSE_STATE_EXPIRED;
+            const isLicenseExpired = licenseState == LicenseConfig.LICENSE_STATE_EXPIRED;
             console.log(`tokenId: ${tokenId}, isLicenseExpired: ${isLicenseExpired}`);
 
             const message = ResponseUtil.createMessage(ResponseUtil.MESSAGE_SUCCESS, 
@@ -137,6 +137,24 @@ module.exports = (app) => {
             const message = ResponseUtil.createMessage(ResponseUtil.MESSAGE_SUCCESS, 
                 {
                     tokens: tokens
+                }
+            );
+            res.json(message);
+        } catch (error) {
+            ResponseUtil.handleError(res, error);
+        }
+    });
+
+    app.post(`${baseUrl}/cheat-expired-license`, async (req, res) => {
+        try {
+            const address = req.body.address;   
+            const tokenId = req.body.tokenId; 
+            
+            const result = await LicenseToken.send(LicenseToken.METHOD_CHEAT_EXPIRED_LICENSE, address, tokenId);
+            console.log('cheat-expired-license successfully');
+            const message = ResponseUtil.createMessage(ResponseUtil.MESSAGE_SUCCESS, 
+                {
+                    message: 'cheat-expired-license successfully' 
                 }
             );
             res.json(message);

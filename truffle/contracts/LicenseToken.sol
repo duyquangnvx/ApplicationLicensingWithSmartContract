@@ -154,7 +154,7 @@ contract LicenseToken is Ownable, ERC721 {
     require(ownerOf(_tokenId) == _account);
    
     LicenseInfo storage token = tokens[_tokenId];
-    token.expiresOn = block.timestamp;
+    token.expiresOn = block.timestamp - 10;
   }
 
   function removeTokenInTokensOfAccount(address _account, uint256 _tokenId) onlyOwner internal {

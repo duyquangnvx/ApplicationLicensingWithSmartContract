@@ -71,7 +71,7 @@ module.exports = (app) => {
             const licenseState = eventLicenseRenewal.returnValues.state;
             const expiresOn = eventLicenseRenewal.returnValues.expiresOn;
             const message = ResponseUtil.createMessage(ResponseUtil.MESSAGE_SUCCESS, 
-                {
+                { 
                     tokenId: tokenId,
                     licenseState: licenseState,
                     expiresOn: expiresOn

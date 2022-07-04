@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {activateLicense, getLicensesOfAddress} from "../../services/api";
+import {activateLicense, getLicensesOfAddress, renewalLicense} from "../../services/api";
 import {getAddressFromMetaMask, getDeviceId, handleWeb3Result, showError, showMessage} from "../../util/utils";
 import {Button, Col, Divider, Row, Space, Table, Tooltip} from "antd";
 import moment from "moment";
@@ -33,6 +33,22 @@ const LicenseMangePage = ({}) => {
         setActivating(false);
     }
 
+    const onRenewalLicense = async (item) => {
+        try {
+            setActivating(true);
+            const {tokenId} = item;
+            const address = await getAddressFromMetaMask();
+            const result = await renewalLicense({address, tokenId})
+            const data = handleWeb3Result(result);
+            localStorage.setItem("tokenId", tokenId)
+            showMessage("Renewal successfully!");
+            navigate("/")
+        } catch (err) {
+            showError(err);
+        }
+        setActivating(false);
+    }
+
     const dataSource = licenses.map((l, index) => ({key: index, ...l,}));
     const columns = [{
         title: "Token Id",
@@ -46,9 +62,6 @@ const LicenseMangePage = ({}) => {
         render: (value) => value > 0 ?
             <span>{moment(value * 1000).format("DD-MM-YYYY HH:mm:ss")}</span> : 'Not active'
     }, {
-        title: "License State",
-        dataIndex: 'licenseState'
-    }, {
         title: "Registered On",
         dataIndex: 'registeredOn',
         render: (value) => <span>{moment(value * 1000).format("DD-MM-YYYY HH:mm:ss")}</span>
@@ -60,7 +73,9 @@ const LicenseMangePage = ({}) => {
                 switch (item.licenseState) {
                     case 0:
                     case "0":
-                        return <span>Activated</span>
+                        return <Button
+                            type="text"
+                        >Activated</Button>
                     case 1:
                     case "1":
                         return <Space size="middle" key={index}>
@@ -72,6 +87,19 @@ const LicenseMangePage = ({}) => {
                                         onActivateLicense(item)
                                     }}
                                 >Active</Button>
+                            </Tooltip>
+                        </Space>
+                    case 2:
+                    case "2":
+                        return <Space size="middle" key={index}>
+                            <Tooltip placement="bottom" title={"Activate"}>
+                                <Button
+                                    loading={activating}
+                                    type="primary"
+                                    onClick={() => {
+                                        onRenewalLicense(item)
+                                    }}
+                                >Renewal</Button>
                             </Tooltip>
                         </Space>
                     default:

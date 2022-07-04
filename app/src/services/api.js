@@ -15,7 +15,7 @@ export const activateLicense = async (body) => {
     return data;
 }
 
-export const renewal = async (body) => {
+export const renewalLicense = async (body) => {
     const {data} = await http.post(`${PATH}/renewal`, body);
     return data;
 }
